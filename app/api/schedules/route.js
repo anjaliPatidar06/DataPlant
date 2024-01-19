@@ -28,20 +28,6 @@ export const GET = async (request) => {
         return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
     }
 }
-export const GET_search = async (request) => {
-    try {
-        if (request.query.search) {
-            console.log("Search query:", request.query.search);
-            // Perform search logic here and return the appropriate response
-            return new Response(JSON.stringify(searchResults));
-        } else {
-            return new Response(JSON.stringify({ error: "Search query parameter is required" }), { status: 400 });
-        }
-    } catch (error) {
-        console.error(error);
-        return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
-    }
-};
 
 export const POST = async (request) => {
     try {

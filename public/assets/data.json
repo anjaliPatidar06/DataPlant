@@ -1,0 +1,31 @@
+{
+  "schedules": [
+    {
+      "id": 1,
+      "title": "Testing code",
+      "description": "testing",
+      "subject": "testingf",
+      "frequency": "Weekly",
+      "repeat": 2,
+      "time": "03:00 PM"
+    },
+    {
+      "id": 2,
+      "title": "Testing code",
+      "description": "testing",
+      "subject": "testingf",
+      "frequency": "Weekly",
+      "repeat": 2,
+      "time": "03:00 PM"
+    },
+    {
+      "id": 0,
+      "title": "decc",
+      "description": "desc",
+      "subject": "daaaa",
+      "frequency": "Monthly",
+      "repeat": "First Monday",
+      "time": "12:00 PM"
+    }
+  ]
+}

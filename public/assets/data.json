@@ -1,28 +1,28 @@
 {
   "schedules": [
     {
-      "id": "32786385-b428-4423-a16e-31845fdb5436",
-      "title": "Test 1",
-      "description": "dgsaf",
-      "subject": "dsf",
-      "frequency": "Weekly",
-      "repeat": 1,
+      "id": "eed97bea-4297-4415-ad12-845ab52626ba",
+      "title": "test 1",
+      "description": "dsfd",
+      "subject": "sdfd",
+      "frequency": "Monthly",
+      "repeat": "First Monday",
       "time": "12:00 PM"
     },
     {
-      "id": "9b3e5d25-29b4-4ba2-9206-ac673f861e72",
+      "id": "711b00a3-c2eb-42c8-8940-d38bb6390829",
       "title": "test 2",
-      "description": "sdfd",
-      "subject": "dsfd",
-      "frequency": "Weekly",
-      "repeat": 2,
+      "description": "dfsdf",
+      "subject": "dsf",
+      "frequency": "Monthly",
+      "repeat": "Last Friday",
       "time": "12:00 PM"
     },
     {
-      "id": "44df5d80-2876-4bf0-9cee-687a5461914d",
-      "title": "test 4",
-      "description": "kjk",
-      "subject": "jhjh",
+      "id": "6c637c09-6e59-464b-8d04-0687f3a53a3a",
+      "title": "sdfdf",
+      "description": "dsfdf",
+      "subject": "dsfsdf",
       "frequency": "Weekly",
       "repeat": 1,
       "time": "10:00 AM"

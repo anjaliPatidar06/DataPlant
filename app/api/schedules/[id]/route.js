@@ -5,12 +5,7 @@ import path from 'path';
 
 export const GET = async (request, { params }) => {
     // const filePath = path.join('public', 'assets', 'data.json');
-    const filePath = path.join('tmp', 'data.json');
-    if (!fs.existsSync(filePath)) {
-        // If the file doesn't exist, create an empty one
-        const emptyData = { schedules: [] };
-        fs.writeFileSync(filePath, JSON.stringify(emptyData, null, 2), 'utf-8');
-    }
+    const filePath = path.resolve(process.cwd(), 'public', 'assets', 'data.json');
     const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     try {
         if (params) {
@@ -24,13 +19,8 @@ export const GET = async (request, { params }) => {
 };
 
 export const PATCH = async (request, { params }) => {
-    const filePath = path.join('tmp', 'data.json');
-    if (!fs.existsSync(filePath)) {
-        // If the file doesn't exist, create an empty one
-        const emptyData = { schedules: [] };
-        fs.writeFileSync(filePath, JSON.stringify(emptyData, null, 2), 'utf-8');
-    }
-    // const filePath = path.resolve(process.cwd(), 'tmp', 'data.json');
+    // const filePath = path.join('public', 'assets', 'data.json');
+    const filePath = path.resolve(process.cwd(), 'public', 'assets', 'data.json');
     const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     try {
         let i = 0;
@@ -40,7 +30,6 @@ export const PATCH = async (request, { params }) => {
 
         if (indexToUpdate !== -1) {
             fileData.schedules[indexToUpdate] = jsonData;
-            console.log("uu", fileData.schedules[indexToUpdate])
             fs.writeFileSync(filePath, JSON.stringify(fileData, null, 2), 'utf-8');
             return new Response(JSON.stringify("Data Updated successfully"), { status: 200 });
         }
@@ -54,12 +43,7 @@ export const PATCH = async (request, { params }) => {
 export const DELETE = async (request, { params }) => {
     try {
         // const filePath = path.join('public', 'assets', 'data.json');
-        const filePath = path.join('tmp', 'data.json');
-        if (!fs.existsSync(filePath)) {
-            // If the file doesn't exist, create an empty one
-            const emptyData = { schedules: [] };
-            fs.writeFileSync(filePath, JSON.stringify(emptyData, null, 2), 'utf-8');
-        }
+        const filePath = path.resolve(process.cwd(), 'public', 'assets', 'data.json');
         const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
         let i = 0;
         const scheduleIdToDelete = params.id; // Assuming you want to delete the schedule with id 3

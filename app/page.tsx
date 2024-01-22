@@ -33,7 +33,6 @@ export default function Home() {
     try {
       const response = await fetch("/api/schedules");
       const result = await response.json();
-      console.log(result);
       if (result) {
         setSchedules(result.schedules);
       }
@@ -51,12 +50,10 @@ export default function Home() {
 
   const handleUpdate = () => {
     // fetchData();
-    console.log("update", updateData);
     setUpdateData((prev) => !prev);
   };
 
   const handleDelete = async (id: number) => {
-    console.log("delete called!", id);
     try {
       const response = await fetch(`/api/schedules/${id}`, {
         method: "DELETE",
@@ -67,7 +64,6 @@ export default function Home() {
       handleUpdate();
 
       if (response.status === 200) {
-        console.log("Data deleted successfully");
       } else {
         console.error(
           "Failed to delete data:",
@@ -85,7 +81,6 @@ export default function Home() {
       if (response.ok) {
         const result = await response.json();
         // Now 'result' contains the parsed JSON data
-        console.log(result);
         setSchedules(result);
         // Set the result to your state or perform other actions
       } else {

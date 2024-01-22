@@ -33,9 +33,6 @@ export default function AddForm(props: IProps) {
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  useEffect(() => {
-    console.log(repeat);
-  }, [repeat]);
   const clearInputs = () => {
     setTitle("");
     setDescription("");
@@ -78,7 +75,6 @@ export default function AddForm(props: IProps) {
       handleClose();
       if (response.ok) {
         const result = await response.json();
-        console.log("Data updated successfully:", result.data);
       } else {
         console.error(
           "Failed to update data:",
@@ -113,7 +109,6 @@ export default function AddForm(props: IProps) {
       props.handleUpdate();
       if (response.ok) {
         const result = await response.json();
-        console.log("Data added successfully:", result.data);
         clearInputs();
       } else {
         console.error(
@@ -128,7 +123,6 @@ export default function AddForm(props: IProps) {
   };
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    console.log(value);
     switch (name) {
       case "title":
         setTitle(value);

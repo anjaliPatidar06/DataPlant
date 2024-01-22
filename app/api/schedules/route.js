@@ -12,7 +12,11 @@ const searchScheduleByTitle = (fileData, title) => {
 export const GET = async (request) => {
     // const filePath = path.join('public', 'assets', 'data.json');
     const filePath = path.join('tmp', 'data.json');
-
+    if (!fs.existsSync(filePath)) {
+        // If the file doesn't exist, create an empty one
+        const emptyData = { schedules: [] };
+        fs.writeFileSync(filePath, JSON.stringify(emptyData, null, 2), 'utf-8');
+    }
     const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     console.log("filepath", filePath);
     try {
@@ -33,9 +37,13 @@ export const GET = async (request) => {
 }
 
 export const POST = async (request) => {
-    // const filePath = path.join('public', 'assets', 'data.json'); 
+    // const filePath = path.join('public', 'assets', 'data.json');
     const filePath = path.join('tmp', 'data.json');
-
+    if (!fs.existsSync(filePath)) {
+        // If the file doesn't exist, create an empty one
+        const emptyData = { schedules: [] };
+        fs.writeFileSync(filePath, JSON.stringify(emptyData, null, 2), 'utf-8');
+    }
     const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     try {
         const jsonData = await request.json();

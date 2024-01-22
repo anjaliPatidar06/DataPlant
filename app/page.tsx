@@ -33,20 +33,24 @@ export default function Home() {
     try {
       const response = await fetch("/api/schedules");
       const result = await response.json();
+      console.log(result);
       if (result) {
         setSchedules(result.schedules);
-      } else {
-        setSchedules([]);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
+
   useEffect(() => {
     !searchValue && fetchData();
   }, [updateData, searchValue]);
 
   const handleUpdate = () => {
+    // fetchData();
     console.log("update", updateData);
     setUpdateData((prev) => !prev);
   };
@@ -128,7 +132,7 @@ export default function Home() {
             edit={false}
             handleUpdate={handleUpdate}
             schedule={{
-              id: 0,
+              id: "",
               title: "",
               description: "",
               subject: "",
@@ -136,7 +140,6 @@ export default function Home() {
               repeat: 0,
               time: "",
             }}
-            dataId={0}
           />
         </nav>
         <section className="listContainer">
@@ -212,7 +215,6 @@ export default function Home() {
                           <AddForm
                             edit={true}
                             schedule={schedule}
-                            dataId={0}
                             handleUpdate={handleUpdate}
                           />
                         </span>

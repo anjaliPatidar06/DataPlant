@@ -1,31 +1,31 @@
 {
   "schedules": [
     {
-      "id": 1,
-      "title": "Testing code",
-      "description": "testing",
-      "subject": "testingf",
+      "id": "32786385-b428-4423-a16e-31845fdb5436",
+      "title": "Test 1",
+      "description": "dgsaf",
+      "subject": "dsf",
       "frequency": "Weekly",
-      "repeat": 2,
-      "time": "03:00 PM"
-    },
-    {
-      "id": 2,
-      "title": "Testing code",
-      "description": "testing",
-      "subject": "testingf",
-      "frequency": "Weekly",
-      "repeat": 2,
-      "time": "03:00 PM"
-    },
-    {
-      "id": 0,
-      "title": "decc",
-      "description": "desc",
-      "subject": "daaaa",
-      "frequency": "Monthly",
-      "repeat": "First Monday",
+      "repeat": 1,
       "time": "12:00 PM"
+    },
+    {
+      "id": "9b3e5d25-29b4-4ba2-9206-ac673f861e72",
+      "title": "test 2",
+      "description": "sdfd",
+      "subject": "dsfd",
+      "frequency": "Weekly",
+      "repeat": 2,
+      "time": "12:00 PM"
+    },
+    {
+      "id": "44df5d80-2876-4bf0-9cee-687a5461914d",
+      "title": "test 3",
+      "description": "kjk",
+      "subject": "jhjh",
+      "frequency": "Weekly",
+      "repeat": 1,
+      "time": "10:00 AM"
     }
   ]
 }

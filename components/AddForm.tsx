@@ -9,7 +9,7 @@ import { EditIcon, Elipse } from "@public/assets/icons";
 
 interface IProps {
   schedule: {
-    id: number;
+    id: string;
     title: string;
     description: string;
     subject: string;
@@ -17,7 +17,6 @@ interface IProps {
     repeat: number;
     time: string;
   };
-  dataId: number;
   edit: boolean;
   handleUpdate: any;
 }
@@ -48,9 +47,18 @@ export default function AddForm(props: IProps) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleEdit = async (id: number) => {
+  function generateActionUUID() {
+    const uuidTemplate = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
+    return uuidTemplate.replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0;
+      const v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
+
+  const handleEdit = async (id: string) => {
     const newData = {
-      id: id,
+      id: props?.schedule.id,
       title: title,
       description: description,
       subject: subject,
@@ -85,7 +93,7 @@ export default function AddForm(props: IProps) {
   const handleSubmit = async () => {
     handleClose();
     const newData = {
-      id: props.dataId,
+      id: generateActionUUID(),
       title: title,
       description: description,
       subject: subject,
@@ -106,6 +114,7 @@ export default function AddForm(props: IProps) {
       if (response.ok) {
         const result = await response.json();
         console.log("Data added successfully:", result.data);
+        clearInputs();
       } else {
         console.error(
           "Failed to add data:",

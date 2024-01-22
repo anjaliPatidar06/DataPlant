@@ -1,27 +1,27 @@
-import textJson from '@public/assets/data.json';
 import fs from 'fs';
 import path from 'path';
 
-const filePath = path.join('public', 'assets', 'data.json'); // Adjust the path based on your project structure
-const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
 
-const searchScheduleByTitle = (title) => {
+
+const searchScheduleByTitle = (fileData, title) => {
     console.log("hello", title, fileData)
     const matchingSchedule = fileData.schedules.filter((schedule) => schedule?.title.toLowerCase().includes(title.toLowerCase()));
     return matchingSchedule || null;
 };
 
 export const GET = async (request) => {
+    const filePath = path.join('public', 'assets', 'data.json'); // Adjust the path based on your project structure
+    const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     try {
         if (request.url.includes('search=')) {
-            const searchValue = request.url.split('=')[1];
+            const searchValue = request.url.split('=')[1].replace("%20", " ");
             console.log(searchValue)
-            const result = searchScheduleByTitle(searchValue);
+            const result = searchScheduleByTitle(fileData, searchValue);
             console.log(result);
             return new Response(JSON.stringify(result));
         } else {
             console.log("hello")
-            return new Response(JSON.stringify(textJson));
+            return new Response(JSON.stringify(fileData));
         }
     } catch (error) {
         console.log(error)
@@ -30,6 +30,8 @@ export const GET = async (request) => {
 }
 
 export const POST = async (request) => {
+    const filePath = path.join('public', 'assets', 'data.json'); // Adjust the path based on your project structure
+    const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     try {
         const jsonData = await request.json();
         fileData.schedules.push(jsonData);

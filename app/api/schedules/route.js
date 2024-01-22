@@ -12,7 +12,7 @@ const searchScheduleByTitle = (fileData, title) => {
 export const GET = async (request) => {
     // const filePath = path.join('public', 'assets', 'data.json');
     // const filePath = path.join('tmp', 'data.json');
-    const filePath = path.resolve(process.cwd(), 'tmp', 'data.json');
+    const filePath = path.resolve(process.cwd(), `${tmp}`, 'data.json');
     if (!fs.existsSync(filePath)) {
         // If the file doesn't exist, create an empty one
         const emptyData = { schedules: [] };

@@ -1,51 +1,36 @@
-import fs from 'fs';
-import path from 'path';
+import Schedule from '@models/product';
+import connectDB from "@utils/MongoDB";
 
-
-
-const searchScheduleByTitle = (fileData, title) => {
-    const matchingSchedule = fileData.schedules.filter((schedule) => schedule?.title.toLowerCase().includes(title.toLowerCase()));
-    return matchingSchedule || null;
-};
-
+await connectDB();
 export const GET = async (request) => {
-    // const filePath = path.join('public', 'assets', 'data.json');
-    const filePath = path.resolve(process.cwd(), 'public', 'assets', 'data.json');
-    if (!fs.existsSync(filePath)) {
-        // If the file doesn't exist, create an empty one
-        const emptyData = { schedules: [] };
-        fs.writeFileSync(filePath, JSON.stringify(emptyData, null, 2), 'utf-8');
-    }
-    const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     try {
         if (request.url.includes('search=')) {
-            const searchValue = request.url.split('=')[1].replace("%20", " ");
-
-            const result = searchScheduleByTitle(fileData, searchValue);
-
-            return new Response(JSON.stringify(result));
-        } else {
-
-            return new Response(JSON.stringify(fileData));
+            const searchValue = request.url.split('=')[1].replace('%20', ' ');
+            const schedules = await Schedule.find({ title: { $regex: searchValue, $options: "i" } });
+            return new Response(JSON.stringify(schedules), { status: 200 });
+        }
+        else {
+            const schedules = await Schedule.find({})
+            return new Response(JSON.stringify(schedules), { status: 200 })
         }
     } catch (error) {
-        console.log(error)
-        return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
-    }
-}
-
-export const POST = async (request) => {
-    // const filePath = path.join('public', 'assets', 'data.json'); 
-    const filePath = path.resolve(process.cwd(), 'public', 'assets', 'data.json');
-    const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    try {
-        const jsonData = await request.json();
-        fileData.schedules.push(jsonData);
-        fs.writeFileSync(filePath, JSON.stringify(fileData, null, 2), 'utf-8');
-        return new Response(JSON.stringify({ message: "Data received successfully" }), { status: 201 });
-    } catch (error) {
-        console.error(error);
-        return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
+        console.log(error);
+        return new Response("Failed to fetch all schedules", { status: 500 })
     }
 };
 
+export const POST = async (request, res) => {
+    const { title, description, subject, frequency, time, repeat } = await request.json();
+
+    const schedule = new Schedule({
+        title: title,
+        description: description,
+        subject: subject,
+        frequency: frequency,
+        time: time,
+        repeat: repeat
+
+    })
+    await schedule.save();
+    return new Response(JSON.stringify({ message: "Data received successfully" }), { status: 201 });
+}

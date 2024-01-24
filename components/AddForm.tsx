@@ -1,15 +1,16 @@
 "use client";
-import { useEffect, useState } from "react";
-
+import { useState } from "react";
 import Popover from "@mui/material/Popover";
-import Button from "@mui/material/Button";
 import { FormControl, MenuItem, Select, TextField } from "@mui/material";
 import AddIcon from "@public/assets/Icon.png";
 import { EditIcon, Elipse } from "@public/assets/icons";
+import Toast from "./Toast";
+import Frequency from "./Frequency";
+import Time from "./Time";
 
 interface IProps {
   schedule: {
-    id: string;
+    _id: string;
     title: string;
     description: string;
     subject: string;
@@ -28,7 +29,9 @@ export default function AddForm(props: IProps) {
   const [frequency, setFrequency] = useState(props.schedule?.frequency);
   const [time, setTime] = useState(props.schedule?.time);
   const [repeat, setRepeat] = useState<number | string>(props.schedule?.repeat);
-  const [selectedDay, setSelectedDay] = useState(repeat);
+
+  const [message, setMessage] = useState("");
+  const [openToast, setOpenToast] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     setAnchorEl(event.currentTarget);
@@ -43,19 +46,14 @@ export default function AddForm(props: IProps) {
   };
   const handleClose = () => {
     setAnchorEl(null);
+    clearInputs();
   };
-  function generateActionUUID() {
-    const uuidTemplate = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
-    return uuidTemplate.replace(/[xy]/g, function (c) {
-      const r = (Math.random() * 16) | 0;
-      const v = c === "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
-  }
-
+  const handleToast = (msg: string) => {
+    setMessage(msg);
+    setOpenToast(true);
+  };
   const handleEdit = async (id: string) => {
     const newData = {
-      id: props?.schedule.id,
       title: title,
       description: description,
       subject: subject,
@@ -74,7 +72,7 @@ export default function AddForm(props: IProps) {
       props.handleUpdate();
       handleClose();
       if (response.ok) {
-        const result = await response.json();
+        handleToast("Meeting Updated!");
       } else {
         console.error(
           "Failed to update data:",
@@ -89,7 +87,6 @@ export default function AddForm(props: IProps) {
   const handleSubmit = async () => {
     handleClose();
     const newData = {
-      id: generateActionUUID(),
       title: title,
       description: description,
       subject: subject,
@@ -108,7 +105,7 @@ export default function AddForm(props: IProps) {
       });
       props.handleUpdate();
       if (response.ok) {
-        const result = await response.json();
+        handleToast("Meeting Added");
         clearInputs();
       } else {
         console.error(
@@ -151,6 +148,7 @@ export default function AddForm(props: IProps) {
 
   return (
     <>
+      {openToast && <Toast message={message} severity={"success"} />}
       <Popover
         className="mainPopover"
         id={id}
@@ -159,11 +157,11 @@ export default function AddForm(props: IProps) {
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "right", // Adjusted to right
+          horizontal: "right",
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "right", // Adjusted to right
+          horizontal: "right",
         }}
       >
         <div className="popover">
@@ -182,36 +180,13 @@ export default function AddForm(props: IProps) {
             <span className="nunito fs-13 keyData">Title</span>
 
             <TextField
-              // key={keyName}
-              // name={keyName}
               className="valueData"
               type=""
               size="small"
               name="title"
               value={title}
               onChange={handleChange}
-              //  id="context-borders"
-              // multiline
               variant="outlined"
-              // inputProps={{
-              //   whiteSpace: "pre-line",
-              //   fontSize: "14px",
-              //   fontFamily: "Inter",
-              //   fontStyle: "normal",
-              //   fontWeight: "400",
-              //   lineHeight: "normal",
-              // }}
-              // sx={{
-              //   width: "100%",
-              // }}
-              // defaultValue={
-              //   "rr"
-              //   // ( payload?.[keyName] )
-              // }
-
-              //  value={
-              //   inputValue
-              // }
             />
           </div>
           <div
@@ -226,36 +201,14 @@ export default function AddForm(props: IProps) {
             <span className="nunito fs-13 keyData">Description</span>
 
             <TextField
-              // key={keyName}
-              // name={keyName}
               className="valueData nunito"
               type=""
               size="small"
               name="description"
               value={description}
               onChange={handleChange}
-              //  id="context-borders"
               multiline
               variant="outlined"
-              // inputProps={{
-              //   whiteSpace: "pre-line",
-              //   fontSize: "14px",
-              //   fontFamily: "Inter",
-              //   fontStyle: "normal",
-              //   fontWeight: "400",
-              //   lineHeight: "normal",
-              // }}
-              // sx={{
-              //   width: "100%",
-              // }}
-              // defaultValue={
-              //   "rr"
-              //   // ( payload?.[keyName] )
-              // }
-
-              //  value={
-              //   inputValue
-              // }
             />
           </div>
           <div
@@ -270,169 +223,23 @@ export default function AddForm(props: IProps) {
             <span className="nunito fs-13 keyData">Subject</span>
 
             <TextField
-              // key={keyName}
-              // name={keyName}
               className="valueData"
               type=""
               size="small"
               name="subject"
               value={subject}
               onChange={handleChange}
-              //  id="context-borders"
-              // multiline
               variant="outlined"
-              // inputProps={{
-              //   whiteSpace: "pre-line",
-              //   fontSize: "14px",
-              //   fontFamily: "Inter",
-              //   fontStyle: "normal",
-              //   fontWeight: "400",
-              //   lineHeight: "normal",
-              // }}
-              // sx={{
-              //   width: "100%",
-              // }}
-              // defaultValue={
-              //   "rr"
-              //   // ( payload?.[keyName] )
-              // }
-
-              //  value={
-              //   inputValue
-              // }
             />
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "16px",
-            }}
-          >
-            <span className="nunito fs-13 keyData">Frequency</span>
+          <Frequency
+            handleChange={handleChange}
+            frequency={frequency}
+            setRepeat={setRepeat}
+            repeat={repeat}
+          />
+          <Time handleChange={handleChange} time={time} />
 
-            <FormControl
-              className="valueData"
-              sx={{
-                height: "32px",
-              }}
-            >
-              <Select
-                value={frequency}
-                onChange={handleChange}
-                name="frequency"
-                // displayEmpty
-                // inputProps={{ "aria-label": "Without label" }}
-              >
-                <MenuItem className="menuItem" value={"Monthly"}>
-                  Monthly
-                </MenuItem>
-                <MenuItem className="menuItem" value={"Weekly"}>
-                  Weekly
-                </MenuItem>
-                <MenuItem className="menuItem" value={"Daily"}>
-                  Daily
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </div>
-          {frequency && frequency !== "Daily" && (
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: "16px",
-              }}
-            >
-              <span className="nunito fs-13 keyData">Repeat</span>
-              {frequency === "Monthly" && (
-                <FormControl
-                  className="valueData"
-                  sx={{
-                    height: "32px",
-                  }}
-                >
-                  <Select
-                    value={repeat}
-                    onChange={handleChange}
-                    name="repeat"
-                    // displayEmpty
-                    inputProps={{ "aria-label": "Without label" }}
-                  >
-                    <MenuItem className="menuItem" value={"First Monday"}>
-                      First Monday
-                    </MenuItem>
-                    <MenuItem className="menuItem" value={"Last Friday"}>
-                      Last Friday
-                    </MenuItem>
-                  </Select>
-                </FormControl>
-              )}
-              {frequency === "Weekly" && (
-                <div className="weeklyDiv">
-                  {["S", "M", "T", "W", "T", "F", "S"].map((t, index) => (
-                    <span
-                      style={{ cursor: "pointer" }}
-                      key={index}
-                      onClick={() => {
-                        setRepeat(index);
-                        setSelectedDay(index);
-                      }}
-                    >
-                      {" "}
-                      <Elipse
-                        text={t}
-                        fill={selectedDay === index ? "#ebe8ef" : "white"}
-                      />
-                    </span>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "16px",
-            }}
-          >
-            <span className="nunito fs-13 keyData">Time</span>
-
-            <FormControl
-              className="valueData"
-              sx={{
-                height: "32px",
-              }}
-            >
-              <Select
-                value={time}
-                onChange={handleChange}
-                name="time"
-                // displayEmpty
-                inputProps={{ "aria-label": "Without label" }}
-              >
-                <MenuItem className="menuItem" value={"10:00 AM"}>
-                  10:00 AM
-                </MenuItem>
-                <MenuItem className="menuItem" value={"12:00 PM"}>
-                  12:00 PM
-                </MenuItem>
-                <MenuItem className="menuItem" value={"03:00 PM"}>
-                  03:00 PM
-                </MenuItem>
-                <MenuItem className="menuItem" value={"05:00 PM"}>
-                  05:00 PM
-                </MenuItem>
-              </Select>
-            </FormControl>
-          </div>
           <div className="formButtons nunito">
             <button
               type="button"
@@ -449,7 +256,9 @@ export default function AddForm(props: IProps) {
               className="formButton nunito"
               style={{ background: "#391E5A", color: "#FFF" }}
               onClick={() => {
-                props.edit ? handleEdit(props.schedule?.id) : handleSubmit();
+                props.edit
+                  ? handleEdit(props.schedule?._id)
+                  : title && handleSubmit();
               }}
             >
               {props.edit ? "Update" : "Done"}

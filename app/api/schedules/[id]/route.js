@@ -1,61 +1,54 @@
+import Schedule from '@models/product';
+import connectDB from "@utils/MongoDB";
 
-import fs from 'fs';
-import path from 'path';
-
-
+await connectDB();
 export const GET = async (request, { params }) => {
-    // const filePath = path.join('public', 'assets', 'data.json');
-    const filePath = path.resolve(process.cwd(), 'public', 'assets', 'data.json');
-    const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     try {
-        if (params) {
-            schedule = fileData.filter((item) => item.id === params.id)
-        } else {
-            return new Response(Json.stringify(schedule));
+
+        console.log("PARAMS", params.id)
+        const schedule = await Schedule.findById(params.id)
+        if (!schedule) return new Response("schedule Not Found", { status: 404 });
+
+        return new Response(JSON.stringify(schedule), { status: 200 })
+
+    } catch (error) {
+        return new Response("Internal Server Error", { status: 500 });
+    }
+}
+
+export const PATCH = async (request, { params }) => {
+    const { title, description, subject, frequency, time, repeat } = await request.json();
+
+    try {
+        const existingSchedule = await Schedule.findById(params.id);
+        if (!existingSchedule) {
+            return new Response("Schedule not found", { status: 404 });
         }
+
+        existingSchedule.title = title;
+        existingSchedule.description = description;
+        existingSchedule.subject = subject;
+        existingSchedule.time = time;
+        existingSchedule.frequency = frequency;
+        existingSchedule.repeat = repeat;
+
+        await existingSchedule.save();
+
+        return new Response("Successfully updated the Schedule", { status: 200 });
     } catch (error) {
         console.log(error)
+        return new Response("Error Updating Schedule", { status: 500 });
     }
 };
 
-export const PATCH = async (request, { params }) => {
-    // const filePath = path.join('public', 'assets', 'data.json');
-    const filePath = path.resolve(process.cwd(), 'public', 'assets', 'data.json');
-    const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-    try {
-        let i = 0;
-        const scheduleIdToUpdate = params.id; // Assuming you want to Update the schedule with id 3
-        const jsonData = await request.json();
-        const indexToUpdate = fileData.schedules.findIndex((schedule) => schedule.id === scheduleIdToUpdate)
-
-        if (indexToUpdate !== -1) {
-            fileData.schedules[indexToUpdate] = jsonData;
-            fs.writeFileSync(filePath, JSON.stringify(fileData, null, 2), 'utf-8');
-            return new Response(JSON.stringify("Data Updated successfully"), { status: 200 });
-        }
-    } catch (error) {
-        console.log(error)
-        return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
-    }
-
-}
-
 export const DELETE = async (request, { params }) => {
     try {
-        // const filePath = path.join('public', 'assets', 'data.json');
-        const filePath = path.resolve(process.cwd(), 'public', 'assets', 'data.json');
-        const fileData = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
-        let i = 0;
-        const scheduleIdToDelete = params.id; // Assuming you want to delete the schedule with id 3
-        const updatedData = {
-            "schedules": fileData.schedules.filter(schedule => schedule.id !== scheduleIdToDelete)
-        };      // const indexToDelete = fileData.schedules.map((schedule) => {
+        const schedule = await Schedule.findById(params.id);
+        await Schedule.deleteOne(schedule);
 
-        fs.writeFileSync(filePath, JSON.stringify(updatedData, null, 2), 'utf-8');
-        return new Response(JSON.stringify("Data DEleted successfully"), { status: 200 });
-        // }
+        return new Response("Schedule deleted successfully", { status: 200 });
     } catch (error) {
         console.log(error)
-        return new Response(JSON.stringify({ error: "Internal Server Error" }), { status: 500 });
+        return new Response("Error deleting schedule", { status: 500 });
     }
-}
+};

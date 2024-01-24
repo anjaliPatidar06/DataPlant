@@ -1,5 +1,5 @@
 import Schedule from '@models/product';
-import connectDB from "@utils/MongoDB";
+import connectDB from "@utils/mongoDB";
 
 await connectDB();
 export const GET = async (request) => {
